@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: treasure_hunt_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: treasure_hunt_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: reverse_treasure_hunt_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgres://postgres:postgres@db:5432/treasure_hunt_db
+      JWT_SECRET: super-secret-dev-key-change-me
+      JWT_EXPIRES_IN: 7d
+      FRONTEND_URL: http://localhost:5173
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    ports:
+      - "3001:3001"
+    command: sh -c "npm run build && node dist/scripts/migrate.js && node dist/scripts/seed.js && npm start"
+
+volumes:
+  db_data:
+    driver: local
+

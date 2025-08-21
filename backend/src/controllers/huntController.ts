@@ -24,7 +24,7 @@ export const createHunt = async (req: AuthenticatedRequest, res: Response): Prom
 
     // Create clues
     for (let i = 0; i < clues.length; i++) {
-      const clue = clues[i];
+      const clue = clues[i]!;
       await client.query(
         `INSERT INTO clues (hunt_id, sequence_order, title, content, clue_type, answer, answer_type, hints, points_value) 
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,

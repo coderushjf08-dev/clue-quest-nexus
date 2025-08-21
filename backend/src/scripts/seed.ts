@@ -92,7 +92,7 @@ async function seedDatabase() {
       ];
       
       for (let i = 0; i < clues.length; i++) {
-        const clue = clues[i];
+        const clue = clues[i]!;
         await query(
           `INSERT INTO clues (hunt_id, sequence_order, title, content, answer, hints, points_value) 
            VALUES ($1, $2, $3, $4, $5, $6, $7)`,

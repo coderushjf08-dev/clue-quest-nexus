@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import type { Secret } from 'jsonwebtoken';
 import { query } from '../config/database.js';
 import { CreateUserRequest, LoginRequest } from '../types/index.js';
 
@@ -34,10 +35,11 @@ export const register = async (req: Request<{}, {}, CreateUserRequest>, res: Res
     const user = result.rows[0];
 
     // Generate JWT token
+    const jwtSecret: Secret = process.env.JWT_SECRET as Secret;
     const token = jwt.sign(
       { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      jwtSecret,
+      { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any }
     );
 
     res.status(201).json({
@@ -82,10 +84,11 @@ export const login = async (req: Request<{}, {}, LoginRequest>, res: Response): 
     }
 
     // Generate JWT token
+    const jwtSecret: Secret = process.env.JWT_SECRET as Secret;
     const token = jwt.sign(
       { userId: user.id },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      jwtSecret,
+      { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any }
     );
 
     res.json({

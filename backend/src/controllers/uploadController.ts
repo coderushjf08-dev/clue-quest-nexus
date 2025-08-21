@@ -67,17 +67,17 @@ export const uploadFile = async (req: AuthenticatedRequest, res: Response): Prom
 
 export const deleteFile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const { public_id } = req.params;
+    const { public_id } = req.params as { public_id?: string };
     const { resource_type = 'image' } = req.query;
 
     // Verify the file belongs to the user (basic security check)
-    if (!public_id.includes(req.user!.id)) {
+    if (!public_id || !public_id.includes(req.user!.id)) {
       res.status(403).json({ error: 'Access denied' });
       return;
     }
 
     // Delete from Cloudinary
-    const result = await cloudinary.uploader.destroy(public_id, {
+    const result = await cloudinary.uploader.destroy(public_id as string, {
       resource_type: resource_type as 'image' | 'video' | 'raw'
     });
 
@@ -94,11 +94,11 @@ export const deleteFile = async (req: AuthenticatedRequest, res: Response): Prom
 
 export const getFileInfo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { public_id } = req.params;
+    const { public_id } = req.params as { public_id?: string };
     const { resource_type = 'image' } = req.query;
 
     // Get file info from Cloudinary
-    const result = await cloudinary.api.resource(public_id, {
+    const result = await cloudinary.api.resource(public_id as string, {
       resource_type: resource_type as 'image' | 'video' | 'raw'
     });
 

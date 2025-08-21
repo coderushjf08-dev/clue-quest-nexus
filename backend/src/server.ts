@@ -79,17 +79,19 @@ app.use('*', (req, res) => {
 // Global error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Error:', err);
-  
-  if (err.type === 'entity.parse.failed') {
-    return res.status(400).json({ error: 'Invalid JSON' });
+
+  if (err?.type === 'entity.parse.failed') {
+    res.status(400).json({ error: 'Invalid JSON' });
+    return;
   }
-  
-  if (err.type === 'entity.too.large') {
-    return res.status(413).json({ error: 'Request entity too large' });
+
+  if (err?.type === 'entity.too.large') {
+    res.status(413).json({ error: 'Request entity too large' });
+    return;
   }
-  
-  res.status(500).json({ 
-    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message 
+
+  res.status(500).json({
+    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : (err?.message || 'Internal server error')
   });
 });
 
