@@ -3,15 +3,13 @@ import { Navigation } from "@/components/Navigation"
 import { HeroSection } from "@/components/HeroSection" 
 import { PlayMode } from "@/components/PlayMode"
 import { Leaderboards } from "@/components/Leaderboards"
+import { CreateHunt } from "@/components/CreateHunt"
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'play' | 'leaderboards'>('home')
+  const [currentView, setCurrentView] = useState<'home' | 'play' | 'leaderboards' | 'create'>('home')
   
   const handleHeroNavigate = (view: 'play' | 'create') => {
-    if (view === 'play') {
-      setCurrentView('play')
-    }
-    // Create view would be implemented later
+    setCurrentView(view)
   }
   
   const renderCurrentView = () => {
@@ -20,6 +18,8 @@ const Index = () => {
         return <PlayMode />
       case 'leaderboards':
         return <Leaderboards />
+      case 'create':
+        return <CreateHunt onBack={() => setCurrentView('home')} />
       default:
         return <HeroSection onNavigate={handleHeroNavigate} />
     }

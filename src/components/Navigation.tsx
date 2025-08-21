@@ -4,7 +4,7 @@ import { useState } from "react"
 
 interface NavigationProps {
   activeView: string
-  onViewChange: (view: 'home' | 'play' | 'leaderboards') => void
+  onViewChange: (view: 'home' | 'play' | 'leaderboards' | 'create') => void
 }
 
 export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
@@ -40,7 +40,7 @@ export const Navigation = ({ activeView, onViewChange }: NavigationProps) => {
                   key={item.id}
                   variant={isActive ? "hero" : "ghost"}
                   size="sm"
-                  onClick={() => onViewChange(item.id as 'home' | 'play' | 'leaderboards')}
+                  onClick={() => onViewChange(item.id as 'home' | 'play' | 'leaderboards' | 'create')}
                   className="flex items-center space-x-2"
                 >
                   <Icon className="w-4 h-4" />
